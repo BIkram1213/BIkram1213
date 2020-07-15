@@ -68,7 +68,7 @@ head(mpg)
 ggplot(mpg, aes(x=displ,y=hwy)) + geom_point()
 ggplot(mpg, aes(x=displ,y=hwy)) + geom_line()
 ggplot(mpg, aes(x=displ,y=hwy)) + geom_polygon()
-
+#
 head(covid)
 ggplot(covid, aes(x=lon, y=lat, size=cases)) + geom_point()
  
