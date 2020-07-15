@@ -1,5 +1,0 @@
-setwd("C:/lab/") 
-load("rs.RData")
-ls()
-library(raster)
-p224r63_1988 <- brick("p224r63_1988_masked.grd")
