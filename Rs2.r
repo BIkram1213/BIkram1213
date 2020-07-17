@@ -19,8 +19,7 @@ points ( covids ) # I have to keep the chart window open otherwise it doesn't wo
 # new lesson
 
 # load the old session
-load ( " /Users/giacomotrotta/lab/R_code_spatial.RData " )
-setwd ( " Users / giacomotrotta / lab " )
+
 library ( spatstat )
 plot ( d )
 points ( covids )
