@@ -3,7 +3,7 @@ raster
 # install.packages ("raster")
 # install.packages ("RStoolbox")
 
-setwd ( " / Users / giacomotrotta / lab " )
+
 library ( raster )
 
 # import the images of the lab folder
