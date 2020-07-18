@@ -63,4 +63,6 @@ plot ( d , col = cl2 , main = " Density of covid-19 " )
 points ( covids )
 plot ( coastlines , add = T )
 dev.off ()
+# put points and can be used to differnitiate the density of something, like covid cases, maybe rare animal distiruution, deals with gps locations, shape files, or cordinates, imposed
+# the shp of world map, area map,or boundaries, chnage of colour scheme according to the density
 
