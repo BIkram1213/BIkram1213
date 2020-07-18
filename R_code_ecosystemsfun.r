@@ -1,45 +1,31 @@
-# R_code_ecosystem_functions.r
-
-# R code to view biomass over the world and calculate changes in ecosystem functions
+# R code to view biomass over the world and calculate changes in ecosystem function
 # energy
 # chemical cycling
 # proxies
 
-# install.packages("rasterdiv")
-# install.packages("rasterVis")
+install.packages("rasterdiv")
+install.packages("rasterVis")
 
 library(rasterVis)
 library(rasterdiv)
 
-data(copNDVI)
+data(copNDVI) # global NDVI data
 plot(copNDVI)
 
 copNDVI <- reclassify(copNDVI, cbind(253:255, NA))
+# reclassify the data to remove water values
 levelplot(copNDVI)
 
 copNDVI10 <- aggregate(copNDVI, fact=10)
+# smoothen the map with lower resolution
 levelplot(copNDVI10)
 
 copNDVI100 <- aggregate(copNDVI, fact=100)
+# high rescolution, not good quality image at this scale
 levelplot(copNDVI100)
 
-####################################
 
-# library(ggplot2)
-
-# myPalette <- colorRampPalette(c('white','green','dark green'))
-# sc <- scale_colour_gradientn(colours = myPalette(100), limits=c(1, 8))
-
-# ggR(copNDVI, geom_raster = TRUE) +
-# scale_fill_gradientn(name = "NDVI", colours = myPalette(100))+
-# labs(x="Longitude",y="Latitude", fill="")+
-#   theme(legend.position = "bottom") +
-#  NULL
-
-
-setwd("~/lab/")
-
-# setwd("C:/lab/") # windows
+setwd("C:/lab/")
 
 library(raster)
 
