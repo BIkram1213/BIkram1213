@@ -1,61 +1,61 @@
-.mn.
 install.packages ("spatstat")
 library ( spatstat )
-
+setwd("C:/lab/")
 attach ( covid )
+#attac the covid file
 head ( covid )
+# head points out the data headers
+covids  <- ppp ( lon , lat , c ( - 180 , 180 ), c ( - 90 , 90 )) 
+# ppp is to point data set on x axis and y axis in a two dimensional surface
+# lon lat puts the value of the axis
 
-covids  <- ppp ( lon , lat , c ( - 180 , 180 ), c ( - 90 , 90 )) # c from the ranges of the variables
-
-? ppp  # gives info on what i can write in ppp
-
-# if I don't want to attack covid just add covid $ to each variable, eg covid $ lon
+? ppp  # gives info of what ppp is 
 
 d  <- density ( covids ) # map built next step the monster
-
+# d sets the density value of our covid data  
 plot ( d )
-points ( covids ) # I have to keep the chart window open otherwise it doesn't work
+points ( covids ) 
+# points highlights out data in points on the chart
 
-# new lesson
-
-# load the old session
-
+# next class
+setwd("C:/lab/")
 library ( spatstat )
 plot ( d )
 points ( covids )
 
-# now I add the coast lines to see the map related to the territories
+# lets add the coastlines from the shp
 install.packages ( " rgdal " )
 library ( rgdal )
 
-# I now import the coastline. it is structured like this (x0y0, x1y1 ...)
+# rgdal uses shape files vector lines, like gis lines like  (x0y0, x1y1 ...)
 
-coastlines  <- readOGR ( " ne_10m_coastline.shp " ) # capitalized OGR otherwise it doesn't work
-
+coastlines  <- readOGR ( " ne_10m_coastline.shp " ) 
 plot ( d )
 points ( covids )
-plot ( coastlines , add = T ) # add means add the line to the previous image
+plot ( coastlines , add = T ) 
+# add to not erase the previos data, like the covid points
 
-# change of the color
+# change the color
 cl  <- colorRampPalette (c ( " yellow " , " orange " , " red " )) ( 100 )
-# decide which colors will be the highest and lowest
-# above goes from yellow to red, 100 indicates that it puts. 100 colors between yellow and red (gradation)
+# decide which colors from low to high
+# increases from yellow to red, 100 is the highest
 
-plot ( d , col = cl , main = " Density of covid-19 " ) # I assign the cl object that is associated with a color function as color
+plot ( d , col = cl , main = " Density of covid-19 " ) 
+# cl is to put colour
 points ( covids )
 plot ( coastlines , add = T )
 
-# exercise: new color ramp palette
-cl2  <- colorRampPalette (c ( " light green " , " yellow " , " orange " , " red " )) ( 100 ) # i can put as many colors as i want
+# new color ramp palette
+cl2  <- colorRampPalette (c ( " white " , " yellow " , " orange " , " red " )) ( 100 ) 
 
-# export this map to PDF
+# export to PDF
 pdf ( " covid_density.pdf " )
-cl2  <- colorRampPalette (c ( " light green " , " yellow " , " orange " , " red " )) ( 100 )
+cl2  <- colorRampPalette (c ( " white " , " yellow " , " orange " , " red " )) ( 100 )
 plot ( d , col = cl2 , main = " Density of covid-19 " )
 points ( covids )
 plot ( coastlines , add = T )
-dev.off () # I close the window so I have the pdf. I can do the same thing with the PNG
-# pdf is better, it doesn't ruin the image quality
+dev.off () # closes the window to have the pdf.
+# pdf is better
 
 png ( " covid_density.png " )
 cl2  <- colorRampPalette (c ( " light green " , " yellow " , " orange " , " red " )) ( 100 )
