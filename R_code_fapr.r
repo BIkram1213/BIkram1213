@@ -1,14 +1,4 @@
 levelplot(copNDVI)
-# 
-# setwd("~/Downloads")
-# 
-# faPAR <- raster("~/Downloads/c_gls_FAPAR300-RT0_202004200000_GLOBE_PROBAV_V1.0.1.nc")
-# 
-# plot(faPAR)
-# 
-# faPAR10 <- aggregate(faPAR, fact=10)
-
-# install.packages("raster")
 
 library(raster)
 library(rasterVis)
@@ -16,18 +6,19 @@ library(rasterdiv)
 
 
 plot(copNDVI)
-copNDVI <- reclassify(copNDVI, cbind(253:255, NA))
+copNDVI <- reclassify(copNDVI, cbind(253:255, NA)) 
+#remove water data which are 253 and 255
 
 levelplot(copNDVI)
 
-setwd("~/lab/")
-# setwd("/Users/utente/lab") #mac
-# setwd("C:/lab/") # windows
+setwd("C:/lab/")
 
 faPAR10 <- raster("faPAR10.tif")
 
 levelplot(faPAR10) 
-
+# different from the previous graph -> we had high NDVI in the equator and also in the forest in the north (the ones with the structure not complex in the 3D)
+# instead now the huge amount of photosynthesis is in the equator since in this area all the light is used by plants (thanks to the 3D structure) while in the northern forests the values are smaller. 
+# in those forests with low 3D structure some part of the light is not used and goes into the soil.
 pdf("copNDVI.pdf")
 levelplot(copNDVI)
 dev.off()
@@ -41,9 +32,8 @@ library(raster)
 library(rasterdiv)
 library(rasterVis)
 
-setwd("~/lab/")
-# setwd("/Users/utente/lab") #mac
-# setwd("C:/lab/") # windows
+
+setwd("C:/lab/")
 
 load("faPAR.RData")
 
@@ -72,7 +62,7 @@ library(rasterdiv)
 library(sf) # to call st_* functions
 # install.packages("sf")
 
-setwd("~/lab/")
+setwd("C:/lab/")
 faPAR10 <- raster("faPAR10.tif")
 plot(faPAR10)
 plot(copNDVI)
