@@ -26,18 +26,20 @@ cl <- colorRampPalette(c('blue','orange','red','yellow')) (100)
 plot(preds, col=cl)
 
 plot(preds$elevation, col=cl)
-points(species[species$Occurrence == 1,], pch=16)
+points(species[species$Occurrence == 1,], pch=16) # present wrt elevation
 
 plot(preds$temperature, col=cl)
-points(species[species$Occurrence == 1,], pch=16)
+points(species[species$Occurrence == 1,], pch=16) # present wrt temperature
 
 plot(preds$precipitation, col=cl)
-points(species[species$Occurrence == 1,], pch=16)
+points(species[species$Occurrence == 1,], pch=16)# present wrt percipitation
 
 plot(preds$vegetation, col=cl)
-points(species[species$Occurrence == 1,], pch=16)
+points(species[species$Occurrence == 1,], pch=16) # present wrt vegetation
 
 # model
+# sdm = species distribution model 
+# glm = generalized linear model
 
 d <- sdmData(train=species, predictors=preds)
 
