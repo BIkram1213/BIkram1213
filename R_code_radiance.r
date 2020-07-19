@@ -2,9 +2,10 @@ library(raster)
 
 toy <- raster(ncol=2, nrow=2, xmn=1, xmx=2, ymn=1, ymx=2)
 values(toy) <- c(1.13,1.44,1.55,3.4)
+#add values to the toy
 plot(toy)
-text(toy, digits=2)
-
+text(toy, digits=2) 
+# only two numbers
 toy2bits <- stretch(toy,minv=0,maxv=3)
 storage.mode(toy2bits[]) = "integer"
 
@@ -29,7 +30,7 @@ plot(toy8bits)
 text(toy8bits, digits=2)
 
 
-# plot altogether!
+# plot together
 par(mfrow=c(1,4))
 
 plot(toy)
