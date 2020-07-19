@@ -45,9 +45,8 @@ plot(predicted.snow.2025.norm, col=cl)
 
 ## day 2nd
 
-setwd("~/lab/snow/")
-# setwd("/Users/utente/lab/snow/") #mac
-# setwd("C:/lab/snow/") # windows
+
+setwd("C:/lab/snow/") # windows
 
 # Exercise: import the snow cover imeages altogether
 
