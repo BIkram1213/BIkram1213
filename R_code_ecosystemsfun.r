@@ -63,3 +63,5 @@ plot(difdvi, col=cld)
 #we can see where we have lost the forests, loss of ecosystem functions (red parts = loss in biomass and related services)
 
 hist(difdvi) # to plot histogram
+
+#see the difference in ecosystem in different time scale via image and colour bands
