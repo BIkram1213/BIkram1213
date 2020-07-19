@@ -1,14 +1,15 @@
+Setwd("C:/lab/")
 snowmay <- raster("c_gls_SCE500_202005180000_CEURO_MODIS_V1.0.1.nc")
 
 cl <- colorRampPalette(c('darkblue','blue','light blue'))(100) 
 
 # Exercise: plot the snow cover with the color ramp palette
 plot(snowmay, col=cl)
+# to have info about the n of pixels
+#snowmay
 
 # Slow manner to import the set
 setwd("~/lab/snow/")
-# setwd("/Users/utente/lab/snow/") #mac
-# setwd("C:/lab/snow/") # windows
 
 snow2000 <- raster("snow2000r.tif")
 snow2005 <- raster("snow2005r.tif")
@@ -25,7 +26,8 @@ plot(snow2020, col=cl)
 
 ##############
 
-# fast version of import and plot of many data for lazy people!
+# fast version of import and plot of multiple data 
+# first  make the list of files -> list.files, with a common pattern 
 rlist <- list.files(pattern="snow")
 rlist
 
@@ -59,13 +61,12 @@ snow.multitemp <- stack(import)
 cl <- colorRampPalette(c('darkblue','blue','light blue'))(100) 
 plot(snow.multitemp, col=cl)
 
-# load("name.RData")
 
 prediction <- raster("predicted.2025.norm.tif")
 plot(prediction, col=cl)
 
 # export the output
-# you made the calculation and you want to send the output to a colleague
+
 
 writeRaster(prediction, "final.tif")
 
