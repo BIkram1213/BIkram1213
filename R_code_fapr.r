@@ -16,9 +16,8 @@ setwd("C:/lab/")
 faPAR10 <- raster("faPAR10.tif")
 
 levelplot(faPAR10) 
-# different from the previous graph -> we had high NDVI in the equator and also in the forest in the north (the ones with the structure not complex in the 3D)
-# instead now the huge amount of photosynthesis is in the equator since in this area all the light is used by plants (thanks to the 3D structure) while in the northern forests the values are smaller. 
-# in those forests with low 3D structure some part of the light is not used and goes into the soil.
+# different from the previous graph -> we had high NDVI in the equator and in the forest in the north
+# in forests with low 3D structure some part of the light are unused and goes into the soil.
 pdf("copNDVI.pdf")
 levelplot(copNDVI)
 dev.off()
