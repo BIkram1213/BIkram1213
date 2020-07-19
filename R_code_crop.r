@@ -1,4 +1,4 @@
-setwd("~/lab")
+setwd("C:/la/b")
 library(raster)
 library(ncdf4) 
 
