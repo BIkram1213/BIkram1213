@@ -1,132 +1,84 @@
 setwd("C:/lab/")
 raster
-# install.packages ("raster")
-# install.packages ("RStoolbox")
+install.packages ("raster")
+install.packages ("RStoolbox")
 
 
-library ( raster )
+library(raster)
+library(RStoolbox)
 
-# import the images of the lab folder
-p224r63_2011  <- brick ( " p224r63_2011_masked.grd " )
-# path = pr = row to find the satellite image uniquely
+# brick to import the whole image of the satellite. 
+p224r63_2011 <- brick("p224r63_2011_masked.grd")
 
-plot ( p224r63_2011 ) # each band has a meaning, 1 = blue, 2 = green, 3 = red, 4 = near infrared, 5 = middle infrared, 6 = termal infrared 7 = middle infrared
+#b1 blue
+#b2 green
+#b3 red
+#b4 NIR
+#b5 SWIR (short-wave infrared)
+#b6 thermal infrared 
+#b7 SWIR
+#b8 panchromatic
 
-# Bands
-# B1 blue
-# B2 green
-# B3 red
-# B4 near infrared
+# plot the image in the RGB 
+plotRGB(p224r63_2011, r=5, g=4, b=3, stretch="Lin") # linear stretch
 
-cl  <- colorRampPalette (c ( ' black ' , ' gray ' , ' light gray ' )) ( 100 ) # change the color of the image
-plot ( p224r63_2011 , col = cl )
+# plot this data by ggplot2 
+library(ggplot2)
+ggRGB(p224r63_2011,5,4,3)
+# same image
 
-# multiframe of different plots
-par ( mfrow = c ( 2 , 2 )) # to have several layers together. In brackets 2 rows for two columns
-# use 2.2 because in the end I will use 4 bands
-# B1
-clb  <- colorRampPalette (c ( ' dark blue ' , ' blue ' , ' light blue ' )) ( 100 )
-plot ( p224r63_2011 $ B1_sre , col = clb ) # the dollar connects the image to the blue band b1
+# let's do the same with the 1988 image 
+p224r63_1988 <- brick("p224r63_1988_masked.grd")
+plotRGB(p224r63_1988, r=5, g=4, b=3, stretch="Lin")
 
-# B2
-clg  <- colorRampPalette (c ( ' dark green ' , ' green ' , ' light green ' )) ( 100 )
-plot ( p224r63_2011 $ B2_sre , col = clg )
+# put the images together
+par(mfrow=c(1,2)) 
+plotRGB(p224r63_1988, r=5, g=4, b=3, stretch="Lin")
+plotRGB(p224r63_2011, r=5, g=4, b=3, stretch="Lin")
+ 
+# name of the bands 
+names(p224r63_2011)
+#"B1_sre" "B2_sre" "B3_sre" "B4_sre" "B5_sre" "B6_bt"  "B7_sre"
 
-# if I close the graph window the par command does not work and I have to call it back
+# $ links the bands to the whole image 
+plot(p224r63_2011$B1_sre, p224r63_2011$B3_sre)
 
-# B3
-clr  <- colorRampPalette (c ( ' dark red ' , ' red ' , ' pink ' )) ( 100 )
-plot ( p224r63_2011 $ B3_sre , col = clr )
-
-# B4
-cln  <- colorRampPalette (c ( ' red ' , ' orange ' , ' yellow ' )) ( 100 )
-plot ( p224r63_2011 $ B4_sre , col = cln )
+# reduce the resolution, > aggregate function, we are decreasing with a factor 10 
+p224r63_2011_res <- aggregate(p224r63_2011, fact=10)
 
 
-# if I want all the images one below the other I have to write
-par ( mfrow = c ( 4 , 1 ))
+p224r63_2011_pca <- rasterPCA(p224r63_2011_res)
 
-# I close all the graphs
-dev.off ()
+plot(p224r63_2011_pca$map)
+# $ is linking all the different pieces of the output, call, model and map 
 
-# RGB to see with a human eye
-plotRGB ( p224r63_2011 , r = 3 , g = 2 , b = 1 , stretch = " Lin " ) # stretch stretches the colors as much as you can
-# Lin must be written in capital letters
+# let's change the colors
+cl <- colorRampPalette(c("dark grey","grey","light grey"))(100)
+plot(p224r63_2011_pca$map, col=cl)
 
-# to make the vegetation more visible I use near infrared (I know that the leaves reflect that length well)
+# info about the model 
+summary(p224r63_2011_pca$model)
 
-# since I can only use 3 bands I eliminate blue
 
-plotRGB ( p224r63_2011 , r = 4 , g = 3 , b = 2 , stretch = " Lin " )
+pairs(p224r63_2011)
+# to see the amount of correlation between the different data 
 
-# this turns all near infrared red
+# now we can plot the first 3 components for example, with plotRGB
+plotRGB(p224r63_2011_pca$map, r=1, g=2, b=3, stretch="Lin")
 
-# ex nir on the top of the G component
+# let's do the same for the 1988 
+p224r63_1988_res <- aggregate(p224r63_1988, fact=10)
+p224r63_1988_pca <- rasterPCA(p224r63_1988_res)
+plot(p224r63_1988_pca$map, col=cl)
 
-plotRGB ( p224r63_2011 , r = 3 , g = 4 , b = 2 , stretch = " Lin " )
+summary(p224r63_1988_pca$model) # we see that there is high correlation 
+pairs(p224r63_1988)
 
-# and finally in the b component
-plotRGB ( p224r63_2011 , r = 3 , g = 2 , b = 4 , stretch = " Lin " )
+# now we can make a difference between the 1988 and 2011 and then plotting the difference. 
+difpca <- p224r63_2011_pca$map - p224r63_1988_pca$map
+plot(difpca)
 
-# comparison between 2011 and 1988
 
-library ( raster )
-p224r63_1988  <- brick ( " p224r63_1988_masked.grd " )
+cldif <- colorRampPalette(c('blue','black','yellow'))(100)
+plot(difpca$PC1, col=cldif)
 
-plot ( p224r63_1988 )
-
-# exercise plot in rgb both images
-par ( mfrow = c ( 2 , 1 ))
-plotRGB ( p224r63_2011 , r = 3 , g = 2 , b = 1 , stretch = " Lin " ) # I must remember that red is band 3 etc. to assign the right band to the right color
-
-plotRGB ( p224r63_1988 , r = 3 , g = 2 , b = 1 , stretch = " Lin " )
-
-# plot in false color rgb 432 both images
-
-par ( mfrow = c ( 2 , 1 ))
-plotRGB ( p224r63_1988 , r = 4 , g = 3 , b = 2 , stretch = " Lin " )
-plotRGB ( p224r63_2011 , r = 4 , g = 3 , b = 2 , stretch = " Lin " )
-
-# accentuate the noise of the images. 2 ways, streccharle more or use multi analysis
-
-par ( mfrow = c ( 2 , 1 ))
-plotRGB ( p224r63_1988 , r = 4 , g = 3 , b = 2 , stretch = " hist " ) # histogram stretch, no more linear
-plotRGB ( p224r63_2011 , r = 4 , g = 3 , b = 2 , stretch = " hist " )
-
-# depending on the health of the leaf I will have different relationships if I do
-# DVI = NIR-RED
-
-dvi2011  <-  p224r63_2011 $ B4_sre  -  p224r63_2011 $ B3_sre  # the dollar connects two things to each other
-cld  <- colorRampPalette (c ( ' darkviolet ' , ' light blue ' , ' lightpink4 ' )) ( 100 )
-plot ( dvi2011 , col = cld )
-
-# you can see that the dvi is not homogeneous. in the middle of the forest there are leaves with a lot of water probably
-
-# exercise dvi for 1988
-dvi1988  <-  p224r63_1988 $ B4_sre  -  p224r63_1988 $ B3_sre  # the dollar connects two things to each other
-cld2  <- colorRampPalette (c ( ' darkviolet ' , ' light blue ' , ' orange ' )) ( 100 )
-plot ( dvi1988 , col = cld2 )
-# new color
-dvi1988  <-  p224r63_1988 $ B4_sre  -  p224r63_1988 $ B3_sre  # the dollar connects two things to each other
-cld2  <- colorRampPalette (c ( ' darkblue ' , ' blue ' , ' light blue ' )) ( 100 )
-plot ( dvi1988 , col = cld2 )
-
-# difference from on year to the other
-diff  <-  dvi2011  -  dvi1988
-plot ( diff ) # you can see where the dvi has changed the most
-
-# changing the grain
-
-# aggregate () is the function. In practice I reduce the quality of the pixels
-p224r63_2011res  <- aggregate ( p224r63_2011 , fact = 10 ) # factor 10
-# res means resempling
-p224r63_2011res100  <- aggregate ( p224r63_2011 , fact = 100 )
-# plot together
-par ( mfrow = c ( 3 , 1 ))
-plotRGB ( p224r63_2011 , r = 4 , g = 3 , b = 2 , stretch = " Lin " )
-plotRGB ( p224r63_2011res , r = 4 , g = 3 , b = 2 , stretch = " Lin " )
-plotRGB ( p224r63_2011res100 , r = 4 , g = 3 , b = 2 , stretch = " Lin " )
-# you can see how depending on the quality I can make considerations or not
-# in res100 nothing is seen of agricultural crops
-p224r63_2011  # to get info on the image
-# in the last image I have a resolution of 3kmx3km, too little
