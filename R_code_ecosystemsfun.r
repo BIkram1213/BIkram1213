@@ -38,12 +38,12 @@ defor2 <- brick("defor2_.jpg")
 
 plotRGB(defor1, r=1, g=2, b=3, stretch="Lin")
 plotRGB(defor2, r=1, g=2, b=3, stretch="Lin")
-
+# RGB put the Red Green Blue plot of multi layerd raster
 par(mfrow=c(1,2))
 plotRGB(defor1, r=1, g=2, b=3, stretch="Lin")
 plotRGB(defor2, r=1, g=2, b=3, stretch="Lin")
 
-dvi1 <- defor1$defor1_.1 - defor1$defor1_.2 
+dvi1 <- defor1$defor1_.1 - defor1$defor1_.2 # plots the difference between the two image
 
 # defor2
 # band1: NIR, defor2_.1
@@ -60,5 +60,6 @@ difdvi <- dvi1 - dvi2
 
 cld <- colorRampPalette(c('blue','white','red'))(100) 
 plot(difdvi, col=cld)
+#we can see where we have lost the forests, loss of ecosystem functions (red parts = loss in biomass and related services)
 
-hist(difdvi)
+hist(difdvi) # to plot histogram
