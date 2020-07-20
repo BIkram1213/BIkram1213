@@ -869,4 +869,213 @@ plot(snowitaly, col=cl)
 
 #---------------------------------------------------------------------------------------------------------
   16. R Code Exam
+  setwd("C:/lab/")
+library ( ncdf4 )
+library ( raster )
+library ( rasterVis )
+library ( rasterdiv )
+library ( rgdal )
+library(RStoolbox)
+library ( gdalUtils )
+
+
+#LAI
+
+#LAI 2000
+
+LAI00 <- raster("c_gls_LAI_200006100000_GLOBE_VGT_V2.0.2.nc")
+plot(LAI00)
+ext <- c(87, 93, 20, 25)
+zoom(LAI00, ext=ext)
+LAISB00 <- crop(LAI00, ext)
+plot(LAISB00)
+plot(LAISB00, main="LAI SB 2000")
+
+#LAI 2010
+
+LAI10 <- raster("c_gls_LAI_201006100000_GLOBE_VGT_V2.0.1.nc")
+plot(LAI10)
+ext <- c(87, 93, 20, 25)
+LAISB10 <- crop(LAI10, ext)
+plot(LAISB10)
+plot(LAISB10, main="LAI SB 2010")
+
+#LAI 2020
+
+LAI20 <- raster("c_gls_LAI-RT2_202006100000_GLOBE_PROBAV_V2.0.1.nc")
+plot(LAI20)
+ext <- c(87, 93, 20, 25)
+LAISB20 <- crop(LAI20, ext)
+plot(LAISB20)
+plot(LAISB20, main="LAI SB 2020")
+
+pdf ( " LAISB.multitemp.pdf " )
+par ( mfrow = c ( 1 , 1 ))
+plot ( LAISB00 , main = "LAI SB 2000" )
+plot ( LAISB10 , main = "LAI SB 2010" )
+plot ( LAISB20 , main = "LAI SB 2020" )
+dev.off()
+
+# Difference 2020 2000
+
+DIFLAI2000  <-  LAISB20  -  LAISB00
+plot(DIFLAI2000)
+cl  <- colorRampPalette (c('red','white','black')) ( 100 )
+plot(DIFLAI2000, col=cl, main="DIF 20-00")
+
+# Difference 2010 2000
+DIFLAI1000  <-  LAISB10  -  LAISB00
+plot(DIFLAI1000, col=cl, main="DIF 10-00")
+
+# Difference 2020 2010
+DIFLAI2010  <-  LAISB20  -  LAISB10
+plot(DIFLAI2010, col=cl, main="DIF 20-10")
+pdf("DIFLAI.pdf"")
+par ( mfrow = c ( 1 , 3 ))
+plot(DIFLAI2000, col=cl, main="DIF 20-00")
+plot(DIFLAI1000, col=cl, main="DIF 10-00")
+plot(DIFLAI1020, col=cl, main="DIF 20-10")
+dev.off()
+
+# FCOVER
+# FC 2000
+
+FC00 <- raster("c_gls_FCOVER_200001100000_GLOBE_VGT_V2.0.2.nc")
+plot(FC00)
+ext <- c(87, 93, 20, 25)
+zoom(LAI00, ext=ext)
+FCSB00 <- crop(FC00, ext)
+plot(FCSB00)
+plot(FCSB00, main="FC SB 2000")
+
+#FC 2010
+FC10 <- raster("c_gls_FCOVER_201001100000_GLOBE_VGT_V2.0.1.nc")
+plot(FC10)
+ext <- c(87, 93, 20, 25)
+FCSB10 <- crop(FC10, ext)
+plot(FCSB10)
+plot(FCSB10, main="FC SB 2010")
+
+#FC2020
+FC20 <- raster("c_gls_FCOVER-RT6_202001100000_GLOBE_PROBAV_V2.0.1.nc")
+plot(FC20)
+ext <- c(87, 93, 20, 25)
+FCSB20 <- crop(FC20, ext)
+plot(FCSB20)
+plot(FCSB20, main="FC SB 2020")
+par ( mfrow = c ( 1 , 3 ))
+plot(FCSB00, main="FC SB 2000")
+plot(FCSB10, main="FC SB 2010")
+plot(FCSB20, main="FC SB 2020")
+
+#DIFFERENCE
+
+DIFFC2000  <-  FCSB20  -  FCSB00
+plot(DIFFC2000)
+cl  <- colorRampPalette (c('red','white','black')) ( 100 )
+plot(DIFFC2000, col=cl, main="DIF 20-00")
+
+# Difference 2010 2000
+DIFFC1000  <-  FCSB10  -  FCSB00
+plot(DIFFC1000, col=cl, main="DIF 10-00")
+
+# Difference 2020 2010
+DIFFC2010  <-  FCSB20  -  FCSB10
+plot(DIFFC2010, col=cl, main="DIF 20-10")
+pdf("DIFFC.pdf"")
+par ( mfrow = c ( 1 , 3 ))
+plot(DIFFC2000, col=cl, main="DIF 20-00")
+plot(DIFFC1000, col=cl, main="DIF 10-00")
+plot(DIFFC2010, col=cl, main="DIF 20-10")
+dev.off()
+
+#LANDCOVER
+#LC 2000
+
+LC00<-brick("ESACCI-LC-L4-LCCS-Map-300m-P1Y-2000-v2.0.7.tif")
+plot(LC00)
+LCSHP  <- readOGR ("C:/lab/Sundarbans_2015poly.shp")
+
+plot ( LCSHP ) 
+proj4string ( LC00 )
+extshp  <- spTransform ( LCSHP , proj4string ( LC00 ))
+LCSB00  <- mask (crop ( LC00 , extent ( extshp )), extshp )
+plot(LCSB00)
+
+#LC 2005
+LC05<-brick("ESACCI-LC-L4-LCCS-Map-300m-P1Y-2005-v2.0.7.tif")
+plot(LC05)
+proj4string ( LC05 )
+extshp  <- spTransform ( LCSHP , proj4string ( LC05 ))
+LCSB05  <- mask (crop ( LC05 , extent ( extshp )), extshp )
+plot(LCSB05)
+
+#LC 2010
+LC10<-brick("ESACCI-LC-L4-LCCS-Map-300m-P1Y-2010-v2.0.7.tif")
+plot(LC10)
+proj4string ( LC10 )
+extshp  <- spTransform ( LCSHP , proj4string ( LC10 ))
+LCSB10  <- mask (crop ( LC10 , extent ( extshp )), extshp )
+plot(LCSB10)
+
+#LC 2015
+LC15<-brick("ESACCI-LC-L4-LCCS-Map-300m-P1Y-2015-v2.0.7.tif")
+plot(LC15)
+proj4string ( LC15 )
+extshp  <- spTransform ( LCSHP , proj4string ( LC15 ))
+LCSB15  <- mask (crop ( LC15 , extent ( extshp )), extshp )
+plot(LCSB15)
+
+par ( mfrow = c ( 2 , 2 ))
+plot(LCSB00, main="LC 2000")
+plot(LCSB05, main="LC 2005")
+plot(LCSB10, main="LC 2010")
+plot(LCSB15, main="LC 2015")
+
+
+#DIFFERENCE
+# DIF 2015 -2000
+DIFFC1500  <-  LCSB15  -  LCSB00
+plot(DIFFC1500)
+cl  <- colorRampPalette (c('red','white','black')) ( 100 )
+plot(DIFFC1500, col=cl, main="DIF 15-00")
+
+# DIF 2015 -2005
+DIFFC1505  <-  LCSB15  -  LCSB05
+plot(DIFFC1505)
+cl  <- colorRampPalette (c('red','white','black')) ( 100 )
+plot(DIFFC1505, col=cl, main="DIF 15-05")
+
+# DIF 2015 -2010
+DIFFC1510  <-  LCSB15  -  LCSB10
+plot(DIFFC1510)
+cl  <- colorRampPalette (c('red','white','black')) ( 100 )
+plot(DIFFC1510, col=cl, main="DIF 15-10")
+par ( mfrow = c ( 1 , 3 ))
+plot(DIFFC1510,col=cl, main="LC DIF 15 10")
+plot(DIFFC1505,col=cl, main="LC DIF 15 05")
+plot(DIFFC1500,col=cl, main="LC DIF 15 00")
+
+GI1995<-brick("1995.tif")
+plot(GI1995)
+plot(GI1995$X1995.1)
+clr <- colorRampPalette(c("dark grey","grey","light grey"))(100)
+plot(GI1995$X1995.1, col=clr)
+
+
+
+GI2015<-brick("2015.tif")
+plot(GI2015)
+plot(GI2015$X2015.1)
+
+par ( mfrow = c ( 1 , 2 ))
+plot(GI1995$X1995.1, main="SI 1995")
+plot(GI2015$X2015.1, main="SI 2015")
+
+#DIFFERENCE
+DIFSI  <-  GI2015$X2015.1-GI1995$X1995.1
+plot(DIFSI)
+cl  <- colorRampPalette (c('red','white','black')) ( 100 )
+plot(DIFSI, col=cl, main="DIF SI 2015-1995")
+
 
