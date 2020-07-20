@@ -869,7 +869,7 @@ plot(snowitaly, col=cl)
 
 #---------------------------------------------------------------------------------------------------------
   16. R Code Exam
-  setwd("C:/lab/")
+ setwd("C:/lab/")
 library ( ncdf4 )
 library ( raster )
 library ( rasterVis )
@@ -883,11 +883,11 @@ library ( gdalUtils )
 
 #LAI 2000
 
-LAI00 <- raster("c_gls_LAI_200006100000_GLOBE_VGT_V2.0.2.nc")
-plot(LAI00)
-ext <- c(87, 93, 20, 25)
-zoom(LAI00, ext=ext)
-LAISB00 <- crop(LAI00, ext)
+LAI00 <- raster("c_gls_LAI_200006100000_GLOBE_VGT_V2.0.2.nc") #import the image
+plot(LAI00) # plot the image
+ext <- c(87, 93, 20, 25) # extent of the project area
+zoom(LAI00, ext=ext)# to view the extent 
+LAISB00 <- crop(LAI00, ext) # crop the rater accoring to our area
 plot(LAISB00)
 plot(LAISB00, main="LAI SB 2000")
 
@@ -909,8 +909,8 @@ LAISB20 <- crop(LAI20, ext)
 plot(LAISB20)
 plot(LAISB20, main="LAI SB 2020")
 
-pdf ( " LAISB.multitemp.pdf " )
-par ( mfrow = c ( 1 , 1 ))
+pdf ( " LAISB.pdf " )
+par ( mfrow = c ( 1 , 3)) # put all the graphs together
 plot ( LAISB00 , main = "LAI SB 2000" )
 plot ( LAISB10 , main = "LAI SB 2010" )
 plot ( LAISB20 , main = "LAI SB 2020" )
@@ -918,7 +918,7 @@ dev.off()
 
 # Difference 2020 2000
 
-DIFLAI2000  <-  LAISB20  -  LAISB00
+DIFLAI2000  <-  LAISB20  -  LAISB00 # calculates the difference between the graphs
 plot(DIFLAI2000)
 cl  <- colorRampPalette (c('red','white','black')) ( 100 )
 plot(DIFLAI2000, col=cl, main="DIF 20-00")
@@ -992,12 +992,12 @@ dev.off()
 #LANDCOVER
 #LC 2000
 
-LC00<-brick("ESACCI-LC-L4-LCCS-Map-300m-P1Y-2000-v2.0.7.tif")
+LC00<-brick("ESACCI-LC-L4-LCCS-Map-300m-P1Y-2000-v2.0.7.tif") # import the image
 plot(LC00)
-LCSHP  <- readOGR ("C:/lab/Sundarbans_2015poly.shp")
+LCSHP  <- readOGR ("C:/lab/Sundarbans_2015poly.shp") # put the polygon shape file of the project area
 
 plot ( LCSHP ) 
-proj4string ( LC00 )
+proj4string ( LC00 ) # crop the image wrt polygon
 extshp  <- spTransform ( LCSHP , proj4string ( LC00 ))
 LCSB00  <- mask (crop ( LC00 , extent ( extshp )), extshp )
 plot(LCSB00)
@@ -1025,7 +1025,7 @@ proj4string ( LC15 )
 extshp  <- spTransform ( LCSHP , proj4string ( LC15 ))
 LCSB15  <- mask (crop ( LC15 , extent ( extshp )), extshp )
 plot(LCSB15)
-
+pdf ( " LcSB.pdf " )
 par ( mfrow = c ( 2 , 2 ))
 plot(LCSB00, main="LC 2000")
 plot(LCSB05, main="LC 2005")
@@ -1051,11 +1051,14 @@ DIFFC1510  <-  LCSB15  -  LCSB10
 plot(DIFFC1510)
 cl  <- colorRampPalette (c('red','white','black')) ( 100 )
 plot(DIFFC1510, col=cl, main="DIF 15-10")
+pdf ( " DIFLC.pdf " )
+
 par ( mfrow = c ( 1 , 3 ))
 plot(DIFFC1510,col=cl, main="LC DIF 15 10")
 plot(DIFFC1505,col=cl, main="LC DIF 15 05")
 plot(DIFFC1500,col=cl, main="LC DIF 15 00")
-
+dev.off()
+       
 GI1995<-brick("1995.tif")
 plot(GI1995)
 plot(GI1995$X1995.1)
